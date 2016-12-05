@@ -17,7 +17,7 @@ public class Dao {
 
 	// username and password
 	String dbUsername = "root";
-	String dbPassword = "";
+	String dbPassword = "123456789";
 
 	private static Dao dao;
 
@@ -82,6 +82,88 @@ public class Dao {
 			}
 		}
 		return null;
+	}
+	
+public Animal[] getAdoptAnimalList(){
+    	
+    	ArrayList<Animal> adoptList=new ArrayList<Animal>();
+    	Connection con = null;
+		Statement sm = null;
+		ResultSet results = null;
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			results = sm.executeQuery("select * from animal where animal.animal_type = 0");
+			while (results.next()) {
+            	//comment_time must be null, then occurs null pointer exception
+            	//so make comment_time which will never used just be order_time
+				int userID = results.getInt("user_id");
+				String userName = getUserNameById(userID);
+				adoptList.add(new Animal(results.getInt("animal_id"),results.getString("animal_name"),results.getString("animal_description"), results.getTimestamp("animal_time").toString(), results.getString("animal_picture"), userName));
+            }
+            System.out.println("New:"+adoptList.size());
+            results.close();
+            sm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Animal[] ret=new Animal[adoptList.size()];
+        adoptList.toArray(ret);
+        return ret;
+	}
+
+	public String getUserNameById(int userID) {
+		String userName = null;
+        
+		Connection con = null;
+		Statement sm = null;
+		ResultSet results = null;
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			results = sm.executeQuery("SELECT * " + "FROM user " + "WHERE user_id='" + userID + "'");
+			if (results.next()) {
+				userName = results.getString("user_name");
+			} else {
+				return null;
+			}
+            results.close();
+            sm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return userName;
+
 	}
 
 	// 获取所有的文章列表
