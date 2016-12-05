@@ -5,10 +5,14 @@ public class Comment {
 	private String commentContent; 
 	private String commentTime; //评论时间
 	private int forumId; //评论的文章id
-	private int userId; //评论的用户id
+	private String userName; //评论的用户名
 	
-	public Comment(int commenId, String commentContent, String commentTime, int formId, int userId){
-		
+	public Comment(int commenId, String commentContent, String commentTime, int formId, String userName){
+		this.commentId = commenId;
+		this.commentContent = commentContent;
+		this.commentTime = commentTime;
+		this.forumId = formId;
+		this.userName = userName;
 	}
 	
 	public int getCommentId() {
@@ -35,11 +39,13 @@ public class Comment {
 	public void setForumId(int forumId) {
 		this.forumId = forumId;
 	}
-	public int getUserId() {
-		return userId;
+
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserId(int userId) {
-		this.userId = userId;
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 	

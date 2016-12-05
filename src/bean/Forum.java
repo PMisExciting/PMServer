@@ -6,13 +6,15 @@ public class Forum {
 	private String forumContent; // 文章内容
 	private String forumTime; // 文章发布时间
 	private String userName; // 发布文章的用户名
+	private int commentNum; //评论数量
 
-	public Forum(int forumId, String forumTitle, String forumContent, String forumTime, String userName) {
+	public Forum(int forumId, String forumTitle, String forumContent, String forumTime, String userName, int commentNum) {
 		this.forumId = forumId;
 		this.forumTitle = forumTitle;
 		this.forumContent = forumContent;
 		this.forumTime = forumTime;
 		this.userName = userName;
+		this.commentNum = commentNum;
 	}
 
 	public int getForumId() {
@@ -53,5 +55,13 @@ public class Forum {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public int getCommentNum() {
+		return commentNum;
+	}
+
+	public void setCommentNum(int commentNum) {
+		this.commentNum = commentNum;
 	}
 }
