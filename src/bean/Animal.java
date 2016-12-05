@@ -8,7 +8,8 @@ public class Animal {
 	private String userName; // 发布该宠物信息的用户名
 	private String time; // 发布该宠物信息的时间
 
-	public Animal(int animalId, String animalName, String animalDescription, String time, String animalPicture, String userName) {
+	public Animal(int animalId, String animalName, String animalDescription, String animalPicture, String userName,
+			String time) {
 		this.animalId = animalId;
 		this.animalName = animalName;
 		this.animalDescription = animalDescription;

@@ -16,16 +16,16 @@ import bean.Forum;
 import dao.Dao;
 
 /**
- * Servlet implementation class GetForumsServlet
+ * Servlet implementation class GetForumsByUserIdServlet
  */
-@WebServlet("/GetForums")
-public class GetForumsServlet extends HttpServlet {
+@WebServlet("/GetForumsByUserId")
+public class GetForumsByUserIdServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetForumsServlet() {
+    public GetForumsByUserIdServlet() {
         super();
     }
 
@@ -33,13 +33,14 @@ public class GetForumsServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		
+		int userId = Integer.parseInt(request.getParameter("userId"));
+		
 		Dao dao = Dao.getInstance();
-		Forum[] forums = dao.getForums();
+		Forum[] forums = dao.getForumsByUserId(userId);
 		OutputStream out = response.getOutputStream();
 		JSONArray array = new JSONArray();
 		
@@ -57,7 +58,8 @@ public class GetForumsServlet extends HttpServlet {
 		
 		out.write(array.toString().getBytes("UTF-8"));
 		out.flush();
-		out.close();
+		out.close();	
+		
 	}
 
 	/**

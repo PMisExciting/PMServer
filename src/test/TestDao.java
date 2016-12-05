@@ -16,6 +16,6 @@ public class TestDao {
 		
 		Comment[] comments = dao.getComments(1);
 		for(Comment c:comments)
-			System.out.println(c.getCommentContent());
+			System.out.println(c.getCommentTime());
 	}
 }
