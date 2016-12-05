@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import bean.Animal;
 import bean.Comment;
 import bean.Forum;
 import bean.User;
@@ -84,7 +85,7 @@ public class Dao {
 		return null;
 	}
 	
-public Animal[] getAdoptAnimalList(){
+	public Animal[] getAdoptAnimalList(){
     	
     	ArrayList<Animal> adoptList=new ArrayList<Animal>();
     	Connection con = null;
@@ -124,6 +125,49 @@ public Animal[] getAdoptAnimalList(){
 		
 		Animal[] ret=new Animal[adoptList.size()];
         adoptList.toArray(ret);
+        return ret;
+	}
+	
+	public Animal[] getLostAnimalList(){
+    	
+    	ArrayList<Animal> lostList=new ArrayList<Animal>();
+    	Connection con = null;
+		Statement sm = null;
+		ResultSet results = null;
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			results = sm.executeQuery("select * from animal where animal.animal_type = 1");
+			while (results.next()) {
+            	//comment_time must be null, then occurs null pointer exception
+            	//so make comment_time which will never used just be order_time
+				int userID = results.getInt("user_id");
+				String userName = getUserNameById(userID);
+				lostList.add(new Animal(results.getInt("animal_id"),results.getString("animal_name"),results.getString("animal_description"), results.getTimestamp("animal_time").toString(), results.getString("animal_picture"), userName));
+            }
+            System.out.println("New:"+lostList.size());
+            results.close();
+            sm.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Animal[] ret=new Animal[lostList.size()];
+        lostList.toArray(ret);
         return ret;
 	}
 

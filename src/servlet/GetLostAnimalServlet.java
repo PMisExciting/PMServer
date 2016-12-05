@@ -12,60 +12,67 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import bean.Forum;
+import bean.Animal;
 import dao.Dao;
 
 /**
- * Servlet implementation class GetForumsByUserIdServlet
+ * Servlet implementation class GetLostAnimalServlet
  */
-@WebServlet("/GetForumsByUserId")
-public class GetForumsByUserIdServlet extends HttpServlet {
+@WebServlet("/GetLostAnimal")
+public class GetLostAnimalServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetForumsByUserIdServlet() {
+    public GetLostAnimalServlet() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		
-		int userId = Integer.parseInt(request.getParameter("userId"));
-		
+
 		Dao dao = Dao.getInstance();
-		Forum[] forums = dao.getForumsByUserId(userId);
+		Animal[] lostList = dao.getLostAnimalList();
 		OutputStream out = response.getOutputStream();
 		JSONArray array = new JSONArray();
 		
-		for(Forum f:forums){
-			JSONObject item = new JSONObject();
-			item.put("forumId", f.getForumId());
-			item.put("forumTitle", f.getForumTitle());
-			item.put("forumContent", f.getForumContent());
-			item.put("forumTime", f.getForumTime());
-			item.put("userName", f.getUserName());
-			item.put("commentNum", f.getCommentNum());
-			
+
+		if (lostList != null) {
+			for (Animal a: lostList) {
+				JSONObject item = new JSONObject();
+				item.put("animalId", a.getAnimalId());
+				item.put("animalName", a.getAnimalName());
+				item.put("animalDescription", a.getAnimalDescription());
+				item.put("animalPicture", a.getAnimalPicture());
+				item.put("userName", a.getUserName());
+				item.put("time", a.getTime());
+				array.put(item);
+			}
+		}else {
+			JSONObject item = null;
 			array.put(item);
 		}
 		
 		out.write(array.toString().getBytes("UTF-8"));
+		//System.out.println(item);
 		out.flush();
-		out.close();	
-		
+		out.close();
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
