@@ -534,4 +534,36 @@ public class Dao {
 			}
 		}
 	}
+
+	// 修改动物头像
+	public int modifyAnimalImg(String animalId, String animalPicture) {
+		Connection con = null;
+		Statement sm = null;
+		boolean results = false;
+
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			results = sm.execute("update `animal` set animal_picture ='" + animalPicture + "' where animal_id='" + animalId + "'");
+			if (results == false) {
+				return -1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return 1;
+	}
 }
