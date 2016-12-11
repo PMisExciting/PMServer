@@ -9,23 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import bean.Forum;
 import dao.Dao;
 
 /**
- * Servlet implementation class GetForumsServlet
+ * Servlet implementation class AddForumServlet
  */
-@WebServlet("/GetForums")
-public class GetForumsServlet extends HttpServlet {
+@WebServlet("/AddForum")
+public class AddForumServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetForumsServlet() {
+    public AddForumServlet() {
         super();
     }
 
@@ -33,29 +29,20 @@ public class GetForumsServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		
+		int userId = Integer.parseInt(request.getParameter("userId"));
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+		
 		Dao dao = Dao.getInstance();
-		Forum[] forums = dao.getForums();
+		dao.addForum(userId, title, content);
+		
 		OutputStream out = response.getOutputStream();
-		JSONArray array = new JSONArray();
-		
-		for(Forum f:forums){
-			JSONObject item = new JSONObject();
-			item.put("forumId", f.getForumId());
-			item.put("forumTitle", f.getForumTitle());
-			item.put("forumContent", f.getForumContent());
-			item.put("forumTime", f.getForumTime());
-			item.put("userName", f.getUserName());
-			item.put("commentNum", f.getCommentNum());
-			
-			array.put(item);
-		}
-		
-		out.write(array.toString().getBytes("UTF-8"));
+		String ret = "success";
+		out.write(ret.getBytes("UTF-8"));
 		out.flush();
 		out.close();
 	}

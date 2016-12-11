@@ -12,20 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import bean.Forum;
+import bean.Comment;
 import dao.Dao;
 
 /**
- * Servlet implementation class GetForumsServlet
+ * Servlet implementation class GetCommentsServlet
  */
-@WebServlet("/GetForums")
-public class GetForumsServlet extends HttpServlet {
+@WebServlet("/GetComments")
+public class GetCommentsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetForumsServlet() {
+    public GetCommentsServlet() {
         super();
     }
 
@@ -33,24 +33,24 @@ public class GetForumsServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		
+		int forumId = Integer.parseInt(request.getParameter("forumId"));
+		
 		Dao dao = Dao.getInstance();
-		Forum[] forums = dao.getForums();
+		Comment[] commentList = dao.getComments(forumId);
+		
 		OutputStream out = response.getOutputStream();
 		JSONArray array = new JSONArray();
 		
-		for(Forum f:forums){
+		for(Comment c: commentList){
 			JSONObject item = new JSONObject();
-			item.put("forumId", f.getForumId());
-			item.put("forumTitle", f.getForumTitle());
-			item.put("forumContent", f.getForumContent());
-			item.put("forumTime", f.getForumTime());
-			item.put("userName", f.getUserName());
-			item.put("commentNum", f.getCommentNum());
+			item.put("commentId", c.getCommentId());
+			item.put("commentContent", c.getCommentContent());
+			item.put("commentTime", c.getCommentTime());
+			item.put("userName", c.getUserName());
 			
 			array.put(item);
 		}

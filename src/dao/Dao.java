@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import bean.Animal;
@@ -261,7 +262,7 @@ public class Dao {
 				int commentNum = getCommentNum(forumId);
 				String userName = "233"; // getUserNameById
 				return new Forum(forumId, results.getString("forum_title"), results.getString("forum_content"),
-						results.getTimestamp("forum_time").toString(), userName, commentNum);
+						results.getTimestamp("forum_time").toString().substring(0,19), userName, commentNum);
 			} else
 				return null;
 
@@ -409,7 +410,7 @@ public class Dao {
 			while (results.next()) {
 				String userName = "233"; // getUserNameById
 				commentList.add(new Comment(results.getInt("comment_id"), results.getString("comment_content"),
-						results.getTimestamp("comment_time").toString(), results.getInt("forum_id"), userName));
+						results.getTimestamp("comment_time").toString().substring(0,19), results.getInt("forum_id"), userName));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -432,5 +433,105 @@ public class Dao {
 		Comment[] ret = new Comment[commentList.size()];
 		commentList.toArray(ret);
 		return ret;
+	}
+
+	public void addComment(int userId, String comment, int forumId){
+		Connection con = null;
+		Statement sm = null;
+		
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			Timestamp time=new java.sql.Timestamp(new java.util.Date().getTime());
+			sm.executeUpdate("insert into comment(comment_content, comment_time, forum_id, user_id) values ('" + comment + "', '"
+						+ time + "', '" + forumId + "','" + userId + "')");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void addForum(int userId, String title, String content){
+		Connection con = null;
+		Statement sm = null;
+		
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			Timestamp time=new java.sql.Timestamp(new java.util.Date().getTime());
+			sm.executeUpdate("insert into forum(forum_title, forum_content, forum_time, user_id) values ('" + title + "', '"
+						+ content + "', '" + time + "','" + userId + "')");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deleteForum(int forumId){
+		Connection con = null;
+		Statement sm = null;
+		
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			sm.executeUpdate("delete from forum where forum_id='"+forumId+"'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deleteComment(int commentId){
+		Connection con = null;
+		Statement sm = null;
+		
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			sm.executeUpdate("delete from comment where comment_id = '"+commentId+"'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
