@@ -566,4 +566,49 @@ public class Dao {
 		
 		return 1;
 	}
+
+	// 修改动物信息
+	public int modifyAnimalTxt(String animalId, String animalName, String animalDescription, String animalTime) {
+
+		Connection con = null;
+		Statement sm = null;
+		boolean results = false;
+
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			results = sm.execute("update `animal` set animal_name = '" + animalName + "', animal_description ='"
+					+ animalDescription + "', animal_name = '" + animalName + "' where animal_id='" + animalId + "'");
+			if (results == false) {
+				return -1;
+			}
+			return 1;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	// 管理员删除动物信息
+	public int deleteAdoptAnimal(String animalId) {
+
+		Connection con = null;
+		Statement sm = null;
+		boolean results = false;
+
+		try {
+			con = DriverManager.getConnection(url, dbUsername, dbPassword);
+			sm = con.createStatement();
+			results = sm.execute("DELETE FROM `animal` " + "WHERE (`animal_id`='"+ animalId +"') ");
+			if (results == false) {
+				return -1;
+			}
+			return 1;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
 }
